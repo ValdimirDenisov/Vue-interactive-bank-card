@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CardChecker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card" id="app">
+
+        <!-- Здесь будет выводиться ЛОГОТИП БАНКА -->
+        <div class="bank">
+            <img v-bind:src="getCardBank">
+        </div>
+
+        <!-- Поле для ввода НОМЕРА КАРТЫ -->
+        <div class="number-container">
+            <input type="text" placeholder="Номер карты" v-model="card_code" v-bind:class="{'input-ok': get_status, 'input-err': !get_status}">
+            <div class="status" v-bind:class="{'status-ok': get_status, 'status-err': !get_status}"></div>
+        </div>
+
+        <!-- Поле для ввода ИМЕНИ ДЕРЖАТЕЛЯ -->
+        <div class="name-container">
+            <input type="text" placeholder="Имя держателя" v-model="err_name" v-bind:class="{'input-ok': get_status_name, 'input-err': !get_status_name}">
+            <div class="status" v-bind:class="{'status-ok': get_status_name, 'status-err': !get_status_name}"></div>
+        </div>
+
+        <!-- Логотип ПЛАТЕЖНОЙ СИСТЕМЫ -->
+        <div class="pay-system">
+            <img v-bind:src="getCardType">
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                card_code: '',
+                err_number: false,
+                err_name: '',
+            }, 
+            computed: {
+                get_status: function() {
+                    let a = this.card_code;
+                    let s = 0;
+                    for (let i = 0; i < a.length; i++) {
+                        let d = +a[i];
+                        if (i + 1 % 2 == 0) {
+                            d = d * 2;
+                            if (d > 9) {
+                                d = d % 10 + d / 10 % 10;
+                            }
+                            s += d;
+                        }
+                    }
+                    return (this.card_code.length == 16) && (s % 10 == 0);
+                },
+                get_status_name: function() {
+                    let a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+                    let s = this.err_name;
+                    for (let i = 0; i < s.length; i++) {
+                        if (a.indexOf(s[i]) == -1) 
+                            return false;
+                    }
+                    return true && s.length != 0;
+                },
+                getCardBank: function () {
+                    let a = this.card_code.substr(0, 6);
+                    if (a == '521178' || a == '548673' || a == '548601' || a == '415428' || a == '676371' || a == '477964' || a == "479004")
+                        return "img/banks/alpha.png";
+                    if (a == '427229' || a == '527883' || a == '447520')
+                        return "img/banks/vtb.png";
+                    if (a == '548999' || a == '526483')
+                        return "img/banks/gazprombank.png";
+                    if (a == '533736' || a == '540616')
+                        return "img/banks/mts-bank.png";
+                    if (a == '434146' || a == '405870' || a == '544573' || a == '532301')
+                        return "img/banks/otkrytie.png";
+                    if (a == '440503' || a == '554761')
+                        return "img/banks/rosbank.png";
+                    if (a == '513691' || a == '510047')
+                        return "img/banks/russian_standart.png";
+                    if (a == '462730' || a == '462729')
+                        return "img/banks/raiffaizen.png";
+                    if (a == '427683' || a == '427901' || a == '427644' || a == '427601' || a == '427901' || a == '427631' || a == "427638" || a == '546938')
+                        return "img/banks/sberbank.png";
+                    if (a == '521324' || a == '437773')
+                        return "img/banks/tinkoff.png";
+                    return "";
+                },
+                getCardType: function() {
+                    if (this.card_code[0] == '2') {
+                        return "img/systems/mir.png";
+                    } else 
+                    if (this.card_code[0] == '3') {
+                        return "img/systems/american-exp.png";
+                    } else 
+                    if (this.card_code[0] == '4') {
+                        return "img/systems/visa.png";
+                    } else 
+                    if (this.card_code[0] == '5') {
+                        return "img/systems/mastercard.png";
+                    } else 
+                    if (this.card_code[0] == '6') {
+                        return "img/systems/maestro.png";
+                    } else 
+                        return "";
+                }
+            }
+        })
+    </script>
+</body>
+</html>
